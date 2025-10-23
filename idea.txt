@@ -1,9 +1,0 @@
-1. Your website's primary function will be to act as a price comparison engine. This involves scraping product data from various e-commerce sites to track price changes over time. By doing this, you can help users find the best deals by comparing prices for the same item across different online stores. 
-This is a powerful tool, especially since dynamic pricing has become a standard practice in e-commerce, and consumers are always looking for ways to make informed decisions.
-
-2. Gather diverse datasets for training large language models (LLMs). This includes scraping public text, transcripts, forums, and niche content to build robust, domain-specific datasets for AI development.
-Why it’s a good idea:
-Training data is the backbone of LLMs, and high-quality, diverse datasets are essential for improving their accuracy, reliability, and versatility. As industries adopt AI-driven tools, demand for tailored datasets will continue to grow.
-
-3. make a web where users gets all the latest news in one platform only instead of going through all news website separately and can select any one news agency if he wants to see only that
-also user can chat with ai if he has any doubt about any news or want to know more about this news article more

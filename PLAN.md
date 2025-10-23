@@ -11,7 +11,7 @@ To start, focus on the essential features that deliver the core value of your id
 
 **Step 2: Select Your Technology Stack**
 Choose technologies that are well-suited for each component of the project.
-*   **Backend Framework:** Python with a framework like Flask or Django is ideal due to its strong support for web scraping and AI/ML libraries.
+*   **Backend Framework:** Python with a framework like Fastapi is ideal due to its strong support for web scraping and AI/ML libraries.
 *   **Web Scraping Libraries:** Use Python libraries like `BeautifulSoup` for parsing HTML and `Requests` for making web requests.
 *   **Database:** Start with a simple database like SQLite for development, then move to a more robust one like PostgreSQL for production. This will store your scraped articles.
 *   **Frontend:** Use standard HTML, CSS, and JavaScript. A framework like Bootstrap can help create a clean user interface quickly.
