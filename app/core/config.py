@@ -10,5 +10,8 @@ class Settings:
     # Database
     # Default to SQLite for local development
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./test.db")
+    
+    # AI
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY")
 
 settings = Settings()
