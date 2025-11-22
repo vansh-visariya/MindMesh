@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchArticles(source = '') {
         articlesGrid.innerHTML = '<p>Loading articles...</p>';
         try {
-            let url = '/api/articles';
+            let url = '/api/articles/';
             if (source) {
                 url += `?source=${encodeURIComponent(source)}`;
             }
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingId = addMessage('ai', 'Thinking...');
 
         try {
-            const response = await fetch('/api/chat', {
+            const response = await fetch('/api/chat/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

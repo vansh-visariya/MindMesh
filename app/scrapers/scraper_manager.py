@@ -49,4 +49,5 @@ async def run_all_scrapers(db: AsyncSession):
             
         except Exception as e:
             print(f"Error running {scraper.source_name} scraper: {e}")
+            await db.rollback()
     print("Scrape cycle completed.")
