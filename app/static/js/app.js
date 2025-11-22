@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
     const chatHistory = document.getElementById('chat-history');
+    const summarizeBtn = document.getElementById('summarize-btn');
 
     let currentArticleId = null;
 
@@ -16,7 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Listeners
     sourceFilter.addEventListener('change', () => fetchArticles(sourceFilter.value));
     refreshBtn.addEventListener('click', () => fetchArticles(sourceFilter.value));
-    
+
+    summarizeBtn.addEventListener('click', () => {
+        chatInput.value = "Can you summarize this article?";
+        sendMessage();
+    });
+
     closeBtn.addEventListener('click', () => {
         chatModal.classList.add('hidden');
         currentArticleId = null;
@@ -62,9 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
         articles.forEach(article => {
             const card = document.createElement('div');
             card.className = 'card';
-            
+
             const date = new Date(article.published_at).toLocaleDateString();
-            
+
             card.innerHTML = `
                 <div class="card-content">
                     <div class="source-tag">${article.source}</div>
@@ -75,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="chat-btn" data-id="${article.id}">Discuss with AI</button>
                 </div>
             `;
-            
+
             articlesGrid.appendChild(card);
         });
 
@@ -100,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addMessage('user', question);
         chatInput.value = '';
-        
+
         // Show loading indicator
         const loadingId = addMessage('ai', 'Thinking...');
 
@@ -115,15 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     question: question
                 })
             });
-            
+
             const data = await response.json();
-            
+
             // Remove loading message and add actual response
             const loadingMsg = document.getElementById(loadingId);
             if (loadingMsg) loadingMsg.remove();
-            
+
             addMessage('ai', data.answer);
-            
+
         } catch (error) {
             console.error('Error sending message:', error);
             const loadingMsg = document.getElementById(loadingId);
@@ -136,11 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${role}`;
         msgDiv.textContent = text;
-        
+
         // Generate a unique ID for loading messages
         const id = 'msg-' + Date.now();
         msgDiv.id = id;
-        
+
         chatHistory.appendChild(msgDiv);
         chatHistory.scrollTop = chatHistory.scrollHeight;
         return id;

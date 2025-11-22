@@ -12,9 +12,13 @@ class AIService:
 
         system_prompt = """You are a helpful news analyst assistant. 
         You will be provided with the text of a news article. 
-        Your task is to answer the user's question based ONLY on the information provided in the article text. 
-        If the answer is not in the article, state that you cannot answer based on the available information.
-        Do not use outside knowledge."""
+        Your task is to answer the user's question based primarily on the information provided in the article text.
+        
+        Guidelines:
+        1. **Summarization**: If asked to summarize, provide a concise summary of the article content.
+        2. **Entity Context**: If the user asks about specific entities (people, organizations, places) mentioned in the article, you MAY use your general knowledge to briefly explain *who* or *what* they are (e.g., "X is the President of Y"), but strictly limit any *events*, *actions*, or *quotes* attributed to them to what is explicitly stated in the article.
+        3. **Strictness**: Do not hallucinate facts or bring in outside news events not mentioned in the text.
+        4. **Uncertainty**: If the answer is not in the article and cannot be inferred from general context definitions, state that you cannot answer based on the available information."""
 
         user_prompt = f"""Article Content:
         {article_content}
