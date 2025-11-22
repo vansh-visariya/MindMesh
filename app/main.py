@@ -28,11 +28,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Advance Web Scraper", lifespan=lifespan)
 
+from fastapi.staticfiles import StaticFiles
 from app.api.endpoints import articles, chat
 
 app.include_router(articles.router, prefix="/api/articles", tags=["articles"])
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to Advance Web Scraper API"}
+# Mount static files
+app.mount("/", StaticFiles(directory="app/static", html=True), name="static")
