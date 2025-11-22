@@ -1,3 +1,5 @@
+## Implementing all the important things in pipeline like data pipeline which will include (scraping, cleaning and storing in database) and like wise other pipeline also.
+
 ### **Phase 1: Foundation and Scoping (Weeks 1-2)**
 
 This initial phase is about making key decisions and laying the groundwork. A clear plan here will prevent complications later.
@@ -12,13 +14,20 @@ To start, focus on the essential features that deliver the core value of your id
 **Step 2: Select Your Technology Stack**
 Choose technologies that are well-suited for each component of the project.
 *   **Backend Framework:** Python with a framework like Fastapi is ideal due to its strong support for web scraping and AI/ML libraries.
-*   **Web Scraping Libraries:** Use Python libraries like `BeautifulSoup` for parsing HTML and `Requests` for making web requests.
-*   **Database:** Start with a simple database like SQLite for development, then move to a more robust one like PostgreSQL for production. This will store your scraped articles.
+*   **Web Scraping Libraries:** Use Python libraries like `Scrapy` and `Requests` for making web requests.
+*   **Database:**  Move to a more robust one like PostgreSQL for production. This will store your scraped articles.
 *   **Frontend:** Use standard HTML, CSS, and JavaScript. A framework like Bootstrap can help create a clean user interface quickly.
-*   **AI & NLP:** Integrate with a Large Language Model (LLM) via an API. Services from providers like OpenAI or Anthropic are excellent for summarization and question-answering tasks.
+*   **AI & NLP:** Integrate with a Large Language Model (LLM) via an API. Services from providers like Groq are excellent for summarization and question-answering tasks.
 
 **Step 3: Choose Initial News Sources**
 Select 3-5 reputable news websites to start. Ideally, choose sites that have a clear and consistent HTML structure for their articles, or even better, provide RSS feeds, which are much easier to parse.
+1.  https://www.bbc.com/
+2.  https://www.cnn.com/
+3.  https://www.hindustantimes.com/
+4.  https://www.reuters.com/
+5.  https://www.nytimes.com/
+6.  https://www.aljazeera.com/
+7.  https://www.timesofindia.com/
 
 ### **Phase 2: Backend Development (Weeks 3-6)**
 

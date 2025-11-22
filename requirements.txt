@@ -1,4 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+python-dotenv
+requests
+scrapy
+beautifulsoup4
 pandas
 numpy
 langchain
-scrapy
+pytest-playwright
+selenium
