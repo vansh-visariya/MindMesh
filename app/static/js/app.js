@@ -1,69 +1,85 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const articlesGrid = document.getElementById('articles-grid');
-    const sourceFilter = document.getElementById('source-filter');
-    const refreshBtn = document.getElementById('refresh-btn');
-    const articleModal = document.getElementById('article-modal');
-    const articleCloseBtn = document.querySelector('.article-close-btn');
-    const articleViewTitle = document.getElementById('article-view-title');
-    const articleViewSource = document.getElementById('article-view-source');
-    const articleViewDate = document.getElementById('article-view-date');
-    const articleViewContent = document.getElementById('article-view-content');
-    const articleOriginalLink = document.getElementById('article-original-link');
-    const articleDiscussBtn = document.getElementById('article-discuss-btn');
+	document.addEventListener('DOMContentLoaded', () => {
+	    const articlesGrid = document.getElementById('articles-grid');
+	    const sourceFilter = document.getElementById('source-filter');
+	    const refreshBtn = document.getElementById('refresh-btn');
+	    const articleModal = document.getElementById('article-modal');
+	    const articleCloseBtn = document.querySelector('.article-close-btn');
+	    const articleViewTitle = document.getElementById('article-view-title');
+	    const articleViewSource = document.getElementById('article-view-source');
+	    const articleViewDate = document.getElementById('article-view-date');
+	    const articleViewContent = document.getElementById('article-view-content');
+	    const articleOriginalLink = document.getElementById('article-original-link');
+	    const articleDiscussBtn = document.getElementById('article-discuss-btn');
 
-    let currentArticleId = null;
+	    // Chat UI elements
+	    const chatModal = document.getElementById('chat-modal');
+	    const chatHistory = document.getElementById('chat-history');
+	    const chatInput = document.getElementById('chat-input');
+	    const sendBtn = document.getElementById('send-btn');
+	    const summarizeBtn = document.getElementById('summarize-btn');
+	    const chatCloseBtn = chatModal ? chatModal.querySelector('.close-btn') : null;
+	    const chatHeaderTitle = chatModal ? chatModal.querySelector('.modal-header h2') : null;
+
+	    let currentArticleId = null;
     let allArticles = []; // Store fetched articles to access content easily
 
     // Fetch articles on load
     fetchArticles();
 
-    // Event Listeners
-    sourceFilter.addEventListener('change', () => fetchArticles(sourceFilter.value));
-    refreshBtn.addEventListener('click', () => fetchArticles(sourceFilter.value));
+	    // Event Listeners
+	    sourceFilter.addEventListener('change', () => fetchArticles(sourceFilter.value));
+	    refreshBtn.addEventListener('click', () => fetchArticles(sourceFilter.value));
 
-    summarizeBtn.addEventListener('click', () => {
-        chatInput.value = "Can you summarize this article?";
-        sendMessage();
-    });
+	    if (summarizeBtn && chatInput) {
+	        summarizeBtn.addEventListener('click', () => {
+	            chatInput.value = "Can you summarize this article?";
+	            sendMessage();
+	        });
+	    }
 
-    closeBtn.addEventListener('click', () => {
-        chatModal.classList.add('hidden');
-        // Don't clear currentArticleId here if we want to keep context, 
-        // but usually closing chat means we are done. 
-        // However, if we opened chat from article view, we might want to go back?
-        // For now, let's keep it simple.
-        chatHistory.innerHTML = '';
-    });
+	    if (chatCloseBtn && chatModal && chatHistory) {
+	        chatCloseBtn.addEventListener('click', () => {
+	            chatModal.classList.add('hidden');
+	            // Clear chat when closing to keep things tidy
+	            chatHistory.innerHTML = '';
+	        });
+	    }
 
     articleCloseBtn.addEventListener('click', () => {
         articleModal.classList.add('hidden');
     });
 
-    window.addEventListener('click', (e) => {
-        if (e.target === chatModal) {
-            chatModal.classList.add('hidden');
-            chatHistory.innerHTML = '';
-        }
-        if (e.target === articleModal) {
-            articleModal.classList.add('hidden');
-        }
-    });
+	    window.addEventListener('click', (e) => {
+	        if (e.target === chatModal && chatModal && chatHistory) {
+	            chatModal.classList.add('hidden');
+	            chatHistory.innerHTML = '';
+	        }
+	        if (e.target === articleModal && articleModal) {
+	            articleModal.classList.add('hidden');
+	        }
+	    });
 
-    sendBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
+	    if (sendBtn) {
+	        sendBtn.addEventListener('click', sendMessage);
+	    }
+	    if (chatInput) {
+	        chatInput.addEventListener('keypress', (e) => {
+	            if (e.key === 'Enter') sendMessage();
+	        });
+	    }
 
-    articleDiscussBtn.addEventListener('click', () => {
-        // Open chat modal from article view
-        // articleModal.classList.add('hidden'); // Optional: close article view or keep it open behind?
-        // Let's keep article view open behind or close it? 
-        // User might want to read while chatting. 
-        // But modals on top of modals is bad UI usually.
-        // Let's close article view for now to focus on chat.
-        articleModal.classList.add('hidden');
-        openChat(currentArticleId);
-    });
+	    if (articleDiscussBtn) {
+	        articleDiscussBtn.addEventListener('click', () => {
+	            // Open chat modal from article view
+	            // articleModal.classList.add('hidden'); // Optional: close article view or keep it open behind?
+	            // Let's keep article view open behind or close it? 
+	            // User might want to read while chatting. 
+	            // But modals on top of modals is bad UI usually.
+	            // Let's close article view for now to focus on chat.
+	            articleModal.classList.add('hidden');
+	            openChat(currentArticleId);
+	        });
+	    }
 
     async function fetchArticles(source = '') {
         articlesGrid.innerHTML = '<div class="loading-spinner">Loading articles...</div>';
@@ -141,51 +157,79 @@ document.addEventListener('DOMContentLoaded', () => {
         articleModal.classList.remove('hidden');
     }
 
-    function openChat(articleId) {
-        chatModal.classList.remove('hidden');
-        // Add initial greeting if empty
-        if (chatHistory.children.length === 0) {
-            addMessage('ai', "Hello! I've read this article. What would you like to know?");
-        }
-    }
+	    function openChat(articleId) {
+	        if (!chatModal || !chatHistory) return;
 
-    async function sendMessage() {
-        const question = chatInput.value.trim();
-        if (!question || !currentArticleId) return;
+	        // Try to update header with article title for better context
+	        if (chatHeaderTitle && allArticles && allArticles.length) {
+	            const article = allArticles.find(a => a.id == articleId);
+	            if (article) {
+	                chatHeaderTitle.textContent = `Discuss: ${article.title}`;
+	            } else {
+	                chatHeaderTitle.textContent = 'Discuss with AI';
+	            }
+	        }
 
-        addMessage('user', question);
-        chatInput.value = '';
+	        chatModal.classList.remove('hidden');
+	        // Add initial greeting if empty
+	        if (chatHistory.children.length === 0) {
+	            addMessage('ai', "Hello! I've read this article. What would you like to know?");
+	        }
+	    }
 
-        // Show loading indicator
-        const loadingId = addMessage('ai', 'Thinking...');
+	    async function sendMessage() {
+	        if (!chatInput) return;
 
-        try {
-            const response = await fetch('/api/chat/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    article_id: currentArticleId,
-                    question: question
-                })
-            });
+	        const question = chatInput.value.trim();
+	        if (!question || !currentArticleId) return;
 
-            const data = await response.json();
+	        addMessage('user', question);
+	        chatInput.value = '';
 
-            // Remove loading message and add actual response
-            const loadingMsg = document.getElementById(loadingId);
-            if (loadingMsg) loadingMsg.remove();
+	        if (sendBtn) {
+	            sendBtn.disabled = true;
+	            sendBtn.textContent = 'Sending...';
+	        }
 
-            addMessage('ai', data.answer);
+	        // Show loading indicator
+	        const loadingId = addMessage('ai', 'Thinking...');
 
-        } catch (error) {
-            console.error('Error sending message:', error);
-            const loadingMsg = document.getElementById(loadingId);
-            if (loadingMsg) loadingMsg.remove();
-            addMessage('ai', "Sorry, I couldn't process your request.");
-        }
-    }
+	        try {
+	            const response = await fetch('/api/chat/', {
+	                method: 'POST',
+	                headers: {
+	                    'Content-Type': 'application/json'
+	                },
+	                body: JSON.stringify({
+	                    article_id: currentArticleId,
+	                    question: question
+	                })
+	            });
+
+	            if (!response.ok) {
+	                throw new Error(`Server responded with ${response.status}`);
+	            }
+
+	            const data = await response.json();
+
+	            // Remove loading message and add actual response
+	            const loadingMsg = document.getElementById(loadingId);
+	            if (loadingMsg) loadingMsg.remove();
+
+	            addMessage('ai', data.answer);
+
+	        } catch (error) {
+	            console.error('Error sending message:', error);
+	            const loadingMsg = document.getElementById(loadingId);
+	            if (loadingMsg) loadingMsg.remove();
+	            addMessage('ai', "Sorry, I couldn't process your request. Please try again.");
+	        } finally {
+	            if (sendBtn) {
+	                sendBtn.disabled = false;
+	                sendBtn.textContent = 'Send';
+	            }
+	        }
+	    }
 
     function addMessage(role, text) {
         const msgDiv = document.createElement('div');

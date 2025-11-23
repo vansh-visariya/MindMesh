@@ -4,7 +4,7 @@ from app.core.config import settings
 class AIService:
     def __init__(self):
         self.client = AsyncGroq(api_key=settings.GROQ_API_KEY)
-        self.model = "llama3-8b-8192" # Efficient model for this task
+        self.model = "llama-3.1-8b-instant" # Efficient model for this task
 
     async def generate_answer(self, article_content: str, question: str) -> str:
         if not article_content:
