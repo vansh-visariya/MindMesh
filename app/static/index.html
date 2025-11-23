@@ -1,47 +1,63 @@
-<header>
-    <div class="container">
-        <h1>News Aggregator</h1>
-        <div class="filters">
-            <select id="source-filter">
-                <option value="">All Sources</option>
-                <option value="BBC News">BBC News</option>
-                <option value="CNN">CNN</option>
-                <option value="Hindustan Times">Hindustan Times</option>
-                <option value="Reuters">Reuters</option>
-                <option value="New York Times">New York Times</option>
-                <option value="Al Jazeera">Al Jazeera</option>
-                <option value="Times of India">Times of India</option>
-            </select>
-            <button id="refresh-btn">Refresh</button>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advance Web Scraper</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>News Aggregator</h1>
+            <div class="filters">
+                <select id="source-filter">
+                    <option value="">All Sources</option>
+                    <option value="BBC News">BBC News</option>
+                    <option value="CNN">CNN</option>
+                    <option value="Hindustan Times">Hindustan Times</option>
+                    <option value="Reuters">Reuters</option>
+                    <option value="New York Times">New York Times</option>
+                    <option value="Al Jazeera">Al Jazeera</option>
+                    <option value="Times of India">Times of India</option>
+                </select>
+                <button id="refresh-btn">Refresh</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="articles-grid" class="grid">
+            <!-- Articles will be injected here -->
+        </div>
+    </main>
+
+    <!-- Chat Modal -->
+    <div id="chat-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Discuss with AI</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div id="chat-history" class="chat-history">
+                <!-- Chat messages -->
+            </div>
+            <div class="quick-actions">
+                <button id="summarize-btn" class="action-chip">Summarize Article</button>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Ask a question about this article...">
+                <button id="send-btn">Send</button>
+            </div>
         </div>
     </div>
-</header>
 
-<main class="container">
-    <div id="articles-grid" class="grid">
-        <!-- Articles will be injected here -->
-    </div>
-</main>
-
-<!-- Chat Modal -->
-<div id="chat-modal" class="modal hidden">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h2>Discuss with AI</h2>
-        <div id="chat-history" class="chat-history">
-            <!-- Chat messages -->
-        </div>
-        <div class="quick-actions">
-            <button id="summarize-btn" class="action-chip">Summarize Article</button>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Ask a question about this article...">
-            <button id="send-btn">Send</button>
-        </div>
-    </div>
-</div>
-
-<script src="/js/app.js"></script>
+    <script src="/js/app.js"></script>
 </body>
 
 </html>

@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function fetchArticles(source = '') {
-        articlesGrid.innerHTML = '<p>Loading articles...</p>';
+        articlesGrid.innerHTML = '<div class="loading-spinner">Loading articles...</div>';
         try {
             let url = '/api/articles/';
             if (source) {
@@ -54,14 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
             renderArticles(articles);
         } catch (error) {
             console.error('Error fetching articles:', error);
-            articlesGrid.innerHTML = '<p>Error loading articles. Please try again.</p>';
+            articlesGrid.innerHTML = '<div class="loading-spinner">Error loading articles. Please try again.</div>';
         }
     }
 
     function renderArticles(articles) {
         articlesGrid.innerHTML = '';
         if (articles.length === 0) {
-            articlesGrid.innerHTML = '<p>No articles found.</p>';
+            articlesGrid.innerHTML = '<div class="loading-spinner">No articles found.</div>';
             return;
         }
 
@@ -141,14 +141,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function addMessage(role, text) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${role}`;
-        msgDiv.textContent = text;
+
+        // Handle typing indicator
+        if (text === 'Thinking...') {
+            msgDiv.innerHTML = '<span class="typing-indicator">Thinking...</span>';
+        } else {
+            msgDiv.textContent = text;
+        }
 
         // Generate a unique ID for loading messages
         const id = 'msg-' + Date.now();
         msgDiv.id = id;
 
         chatHistory.appendChild(msgDiv);
-        chatHistory.scrollTop = chatHistory.scrollHeight;
+
+        // Smooth scroll to bottom
+        setTimeout(() => {
+            chatHistory.scrollTo({
+                top: chatHistory.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 50);
+
         return id;
     }
 });
