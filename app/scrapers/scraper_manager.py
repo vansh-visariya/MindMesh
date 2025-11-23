@@ -29,8 +29,16 @@ async def run_all_scrapers(db: AsyncSession):
             articles = await scraper.scrape()
             print(f"Found {len(articles)} articles from {scraper.source_name}")
             
-            for scraped_article in articles:
-                # Check if article already exists
+            # Deduplicate articles by URL within the batch
+            unique_articles = {}
+            for art in articles:
+                if art.url not in unique_articles:
+                    unique_articles[art.url] = art
+            
+            print(f"Processing {len(unique_articles)} unique articles from {scraper.source_name}")
+
+            for scraped_article in unique_articles.values():
+                # Check if article already exists in DB
                 result = await db.execute(select(Article).where(Article.url == scraped_article.url))
                 existing_article = result.scalars().first()
                 

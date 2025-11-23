@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     
     # Start Scheduler
-    scheduler.add_job(scrape_job, 'interval', seconds=10) # change it to Run every hour
+    scheduler.add_job(scrape_job, 'interval', minutes=15) # Run every 15 minutes
     scheduler.start()
     
     yield

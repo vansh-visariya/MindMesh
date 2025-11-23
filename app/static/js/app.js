@@ -2,14 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const articlesGrid = document.getElementById('articles-grid');
     const sourceFilter = document.getElementById('source-filter');
     const refreshBtn = document.getElementById('refresh-btn');
-    const chatModal = document.getElementById('chat-modal');
-    const closeBtn = document.querySelector('.close-btn');
-    const chatInput = document.getElementById('chat-input');
-    const sendBtn = document.getElementById('send-btn');
-    const chatHistory = document.getElementById('chat-history');
-    const summarizeBtn = document.getElementById('summarize-btn');
+    const articleModal = document.getElementById('article-modal');
+    const articleCloseBtn = document.querySelector('.article-close-btn');
+    const articleViewTitle = document.getElementById('article-view-title');
+    const articleViewSource = document.getElementById('article-view-source');
+    const articleViewDate = document.getElementById('article-view-date');
+    const articleViewContent = document.getElementById('article-view-content');
+    const articleOriginalLink = document.getElementById('article-original-link');
+    const articleDiscussBtn = document.getElementById('article-discuss-btn');
 
     let currentArticleId = null;
+    let allArticles = []; // Store fetched articles to access content easily
 
     // Fetch articles on load
     fetchArticles();
@@ -25,21 +28,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeBtn.addEventListener('click', () => {
         chatModal.classList.add('hidden');
-        currentArticleId = null;
+        // Don't clear currentArticleId here if we want to keep context, 
+        // but usually closing chat means we are done. 
+        // However, if we opened chat from article view, we might want to go back?
+        // For now, let's keep it simple.
         chatHistory.innerHTML = '';
+    });
+
+    articleCloseBtn.addEventListener('click', () => {
+        articleModal.classList.add('hidden');
     });
 
     window.addEventListener('click', (e) => {
         if (e.target === chatModal) {
             chatModal.classList.add('hidden');
-            currentArticleId = null;
             chatHistory.innerHTML = '';
+        }
+        if (e.target === articleModal) {
+            articleModal.classList.add('hidden');
         }
     });
 
     sendBtn.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
+    });
+
+    articleDiscussBtn.addEventListener('click', () => {
+        // Open chat modal from article view
+        // articleModal.classList.add('hidden'); // Optional: close article view or keep it open behind?
+        // Let's keep article view open behind or close it? 
+        // User might want to read while chatting. 
+        // But modals on top of modals is bad UI usually.
+        // Let's close article view for now to focus on chat.
+        articleModal.classList.add('hidden');
+        openChat(currentArticleId);
     });
 
     async function fetchArticles(source = '') {
@@ -51,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const response = await fetch(url);
             const articles = await response.json();
+            allArticles = articles; // Store for local access
             renderArticles(articles);
         } catch (error) {
             console.error('Error fetching articles:', error);
@@ -74,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <div class="card-content">
                     <div class="source-tag">${article.source}</div>
-                    <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                    <h3><a href="#" class="article-link" data-id="${article.id}">${article.title}</a></h3>
                     <div class="meta">Published: ${date}</div>
                 </div>
                 <div class="card-actions">
@@ -92,12 +116,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 openChat(currentArticleId);
             });
         });
+
+        // Add event listeners to article links
+        document.querySelectorAll('.article-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = e.target.dataset.id;
+                const article = allArticles.find(a => a.id == id);
+                if (article) {
+                    openArticleView(article);
+                }
+            });
+        });
+    }
+
+    function openArticleView(article) {
+        currentArticleId = article.id;
+        articleViewTitle.textContent = article.title;
+        articleViewSource.textContent = article.source;
+        articleViewDate.textContent = new Date(article.published_at).toLocaleDateString();
+        articleViewContent.textContent = article.content || "Content not available.";
+        articleOriginalLink.href = article.url;
+
+        articleModal.classList.remove('hidden');
     }
 
     function openChat(articleId) {
         chatModal.classList.remove('hidden');
-        // Add initial greeting
-        addMessage('ai', "Hello! I've read this article. What would you like to know?");
+        // Add initial greeting if empty
+        if (chatHistory.children.length === 0) {
+            addMessage('ai', "Hello! I've read this article. What would you like to know?");
+        }
     }
 
     async function sendMessage() {
