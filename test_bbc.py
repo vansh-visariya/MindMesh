@@ -1,9 +1,15 @@
 import asyncio
 from app.scrapers.bbc import BBCScraper
+from app.scrapers.cnn import CNNScraper
+from app.scrapers.reuters import ReutersScraper
+from app.scrapers.nyt import NYTScraper
+from app.scrapers.al_jazeera import AlJazeeraScraper
+from app.scrapers.hindustan_times import HTScraper
+from app.scrapers.toi import TOIScraper
 
 async def main():
-    scraper = BBCScraper()
-    print("Scraping BBC...")
+    scraper = TOIScraper()
+    print("Scraping...")
     articles = await scraper.scrape()
     print(f"Found {len(articles)} articles.")
     for article in articles[:3]:

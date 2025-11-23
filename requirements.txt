@@ -15,3 +15,5 @@ aiosqlite
 asyncpg
 apscheduler
 groq
+playwright
+feedparser

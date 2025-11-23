@@ -7,6 +7,7 @@ from app.scrapers.scraper_manager import run_all_scrapers
 scheduler = AsyncIOScheduler()
 
 async def scrape_job():
+    print("Scheduler triggered!")
     async with AsyncSessionLocal() as db:
         await run_all_scrapers(db)
 
@@ -17,7 +18,7 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     
     # Start Scheduler
-    scheduler.add_job(scrape_job, 'interval', hours=1) # Run every hour
+    scheduler.add_job(scrape_job, 'interval', seconds=10) # change it to Run every hour
     scheduler.start()
     
     yield

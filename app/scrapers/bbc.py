@@ -62,9 +62,12 @@ class BBCScraper(BaseScraper):
                     # Fetching full content for every article on homepage might be slow/blocked
                     # We will implement a detail fetcher later or loop here
                     
+                    # Fetch full content
+                    content = await self.scrape_article_content(url)
+                    
                     articles.append(ScrapedArticle(
                         title=title,
-                        content="", # Content to be fetched in detail step
+                        content=content,
                         source=self.source_name,
                         url=url,
                         published_at=datetime.now() # Placeholder

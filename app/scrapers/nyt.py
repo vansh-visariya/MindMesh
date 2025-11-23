@@ -45,9 +45,11 @@ class NYTScraper(BaseScraper):
                     else:
                         url = href
 
+                    content = await self.scrape_article_content(url)
+
                     articles.append(ScrapedArticle(
                         title=title,
-                        content="",
+                        content=content,
                         source=self.source_name,
                         url=url,
                         published_at=datetime.now()
@@ -56,3 +58,24 @@ class NYTScraper(BaseScraper):
                 print(f"Error scraping NYT: {e}")
                 
         return articles
+
+    async def scrape_article_content(self, url: str) -> str:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(url, headers=headers)
+                soup = BeautifulSoup(response.content, 'html.parser')
+                
+                # NYT content is usually in 'section' with name 'articleBody'
+                article_body = soup.find('section', {'name': 'articleBody'})
+                
+                if article_body:
+                    paragraphs = article_body.find_all('p')
+                    text = " ".join([p.get_text(strip=True) for p in paragraphs])
+                    return text.strip()
+                
+                return ""
+            except Exception:
+                return ""
